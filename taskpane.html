@@ -1,0 +1,206 @@
+<!-- Copyright (c) Microsoft Corporation. All rights reserved. Licensed under the MIT License. -->
+<!-- This file shows how to design a first-run page that provides a welcome screen to the user about the features of the add-in. -->
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Simple Logic Excel Add-In</title>
+
+    <!-- Office JavaScript API -->
+    <script type="text/javascript" src="https://appsforoffice.microsoft.com/lib/1.1/hosted/office.js"></script>
+
+    <!-- Custom styles -->
+    <link href="taskpane.css" rel="stylesheet" type="text/css" />
+    <script src="taskpane.js"></script>
+    <style>
+        body {
+            color: white;
+        }
+    </style>
+</head>
+
+<body class="ms-Fabric">
+    <!-- Home Screen -->
+    <div id="homeScreen" class="ms-Grid" style="display: block;">
+        <h1 class="ms-font-xl">Simple Logic Excel Add-In</h1>
+        <div class="ms-Grid-row">
+            <div class="ms-Grid-col ms-sm4">
+                <button class="ms-Button" onclick="showFunction('andLogic')">
+                    <span class="ms-Button-label">AND</span>
+                </button>
+            </div>
+            <div class="ms-Grid-col ms-sm4">
+                <button class="ms-Button" onclick="showFunction('ifLogic')">
+                    <span class="ms-Button-label">IF</span>
+                </button>
+            </div>
+            <div class="ms-Grid-col ms-sm4">
+                <button class="ms-Button" onclick="showFunction('orLogic')">
+                    <span class="ms-Button-label">OR</span>
+                </button>
+            </div>
+            <div class="ms-Grid-col ms-sm4">
+                <button class="ms-Button" onclick="showFunction('ifsLogic')">
+                    <span class="ms-Button-label">IFS</span>
+                </button>
+            </div>
+            <!-- Add more buttons for other functions -->
+        </div>
+    </div>
+
+    <!-- AND Logic Page -->
+    <div id="andLogicPage" class="ms-Grid" style="display: none;">
+        <h1 class="ms-font-xl">AND LOGIC</h1>
+        <p>AND Logic Description: Displays TRUE if A2 is greater than 1 AND less than 100, otherwise it displays FALSE.</p>
+        <p>AND Logic Syntax: =AND(A2>1, A2<100)</p>
+        <label for="andCell">Cell for AND Logic:</label>
+        <input type="text" id="andCell"><br>
+        <label for="andTrueValue">Value if TRUE:</label>
+        <input type="text" id="andTrueValue"><br>
+        <label for="andFalseValue">Value if FALSE:</label>
+        <input type="text" id="andFalseValue"><br>
+        <label for="andCondition1">Enter Values Here:</label><br>
+        AND(
+        <input type="text" id="andCondition1"> <select id="andOperator1">
+            <option value=">">&gt; greater than</option>
+            <option value="<">&lt; less than</option>
+            <option value=">=">&gt;= greater than or equal to</option>
+            <option value="<=">&lt;= less than or equal to</option>
+            <option value="<>">&lt;&gt; not equal to</option>
+            <option value="=">= equal to</option>
+        </select> <input type="text" id="andValue1"> ,
+        <input type="text" id="andCondition2"> <select id="andOperator2">
+            <option value=">">&gt; greater than</option>
+            <option value="<">&lt; less than</option>
+            <option value=">=">&gt;= greater than or equal to</option>
+            <option value="<=">&lt;= less than or equal to</option>
+            <option value="<>">&lt;&gt; not equal to</option>
+            <option value="=">= equal to</option>
+        </select> <input type="text" id="andValue2"> )
+        <br>
+        <button id="insertAndLogic" class="ms-Button">
+            <span class="ms-Button-label">Insert AND Logic</span>
+        </button>
+        <button class="ms-Button" onclick="showHomeScreen()">
+            <span class="ms-Button-label">Back</span>
+        </button>
+    </div>
+
+    <!-- IF Logic Page -->
+    <div id="ifLogicPage" class="ms-Grid" style="display: none;">
+        <h1 class="ms-font-xl">IF LOGIC</h1>
+        <p>IF Logic Description: The IF function allows you to make logical comparisons between a value and what you expect.</p>
+        <p>IF Logic Syntax: =IF(C2="Yes",1,2) says IF(C2 = Yes, then return a 1, otherwise return a 2).</p>
+        <label for="ifCell">Cell for IF Logic:</label>
+        <input type="text" id="ifCell"><br>
+        <label for="ifTrueValue">Value if TRUE:</label>
+        <input type="text" id="ifTrueValue"><br>
+        <label for="ifFalseValue">Value if FALSE:</label>
+        <input type="text" id="ifFalseValue"><br>
+        <label for="ifCondition">Enter Values Here:</label><br>
+        IF(
+        <input type="text" id="ifCondition"> <select id="ifOperator">
+            <option value=">">&gt; greater than</option>
+            <option value="<">&lt; less than</option>
+            <option value=">=">&gt;= greater than or equal to</option>
+            <option value="<=">&lt;= less than or equal to</option>
+            <option value="<>">&lt;&gt; not equal to</option>
+            <option value="=">= equal to</option>
+        </select> <input type="text" id="ifValue"> ,
+        <input type="text" id="ifTrueValueLogic"> , <input type="text" id="ifFalseValueLogic">)
+        <br>
+        <button id="insertIfLogic" class="ms-Button">
+            <span class="ms-Button-label">Insert IF Logic</span>
+        </button>
+        <button class="ms-Button" onclick="showHomeScreen()">
+            <span class="ms-Button-label">Back</span>
+        </button>
+    </div>
+
+    <!-- OR Logic Page -->
+    <div id="orLogicPage" class="ms-Grid" style="display: none;">
+        <h1 class="ms-font-xl">OR LOGIC</h1>
+        <p>OR Logic Description: Use the OR function to determine if any conditions in a test are TRUE.</p>
+        <p>OR Logic Syntax: =IF(OR(A2>1,A2<100),A2,"The value is out of range")</p>
+        <label for="orCell">Cell for OR Logic:</label>
+        <input type="text" id="orCell"><br>
+        <label for="orTrueValue">Value if TRUE:</label>
+        <input type="text" id="orTrueValue"><br>
+        <label for="orFalseValue">Value if FALSE:</label>
+        <input type="text" id="orFalseValue"><br>
+        <label for="orCondition1">Enter Values Here:</label><br>
+        OR(
+        <input type="text" id="orCondition1"> <select id="orOperator1">
+            <option value=">">&gt; greater than</option>
+            <option value="<">&lt; less than</option>
+            <option value=">=">&gt;= greater than or equal to</option>
+            <option value="<=">&lt;= less than or equal to</option>
+            <option value="<>">&lt;&gt; not equal to</option>
+            <option value="=">= equal to</option>
+        </select> <input type="text" id="orValue1"> ,
+        <input type="text" id="orCondition2"> <select id="orOperator2">
+            <option value=">">&gt; greater than</option>
+            <option value="<">&lt; less than</option>
+            <option value=">=">&gt;= greater than or equal to</option>
+            <option value="<=">&lt;= less than or equal to</option>
+            <option value="<>">&lt;&gt; not equal to</option>
+            <option value="=">= equal to</option>
+        </select> <input type="text" id="orValue2"> )
+        <br>
+        <button id="insertOrLogic" class="ms-Button">
+            <span class="ms-Button-label">Insert OR Logic</span>
+        </button>
+        <button class="ms-Button" onclick="showHomeScreen()">
+            <span class="ms-Button-label">Back</span>
+        </button>
+    </div>
+
+
+<!-- IFS Logic Page -->
+<div id="ifsLogicPage" class="ms-Grid" style="display: none;">
+    <h1 class="ms-font-xl">IFS LOGIC</h1>
+    <p>IFS Logic Description: The IFS function checks whether one or more conditions are met, and returns a value that corresponds to the first TRUE condition. IFS can take the place of multiple nested IF statements, and is much easier to read with multiple conditions.</p>
+    <p>IFS Logic Syntax: =IFS([Something is True1, Value if True1, Something is True2, Value if True2, Something is True3, Value if True3])</p>
+    <label for="ifsCell">Cell for IFS Logic:</label>
+    <input type="text" id="ifsCell"><br>
+    <div id="ifsConditionsContainer">
+        <div id="ifsConditionDiv1">
+            <label for="ifsCondition1">IFS(</label>
+            <input type="text" id="ifsCondition1">
+            <select id="ifsOperator1">
+                <option value=">">&gt; greater than</option>
+                <option value="<">&lt; less than</option>
+                <option value=">=">&gt;= greater than or equal to</option>
+                <option value="<=">&lt;= less than or equal to</option>
+                <option value="<>">&lt;&gt; not equal to</option>
+                <option value="=">= equal to</option>
+            </select>
+            <input type="text" id="ifsValue1"> , 
+            <input type="text" id="ifsTrueValue1">
+            <span>)</span>
+            <br>
+        </div>
+    </div>
+    <button id="addIfsCondition" class="ms-Button">
+        <span class="ms-Button-label">Add Another Condition</span>
+    </button>
+    <button id="insertIfsLogic" class="ms-Button">
+        <span class="ms-Button-label">Insert IFS Logic</span>
+    </button>
+    <button class="ms-Button" onclick="showHomeScreen()">
+        <span class="ms-Button-label">Back</span>
+    </button>
+</div>
+
+
+
+    <!-- Add similar divs for other functions like switchLogic, etc. -->
+
+</body>
+
+</html>
+
